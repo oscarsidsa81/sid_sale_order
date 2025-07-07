@@ -56,6 +56,9 @@ class SaleOrder(models.Model):
                 help="Para cálculo de Hitos Pendientes del campo Down Payment"
             )
 
+    class SaleOrder ( models.Model ) :
+        _inherit = 'sale.order'
+
     def _compute_x_hitos_pendientes(self):
         for record in self:
             total_down_payment = 0.0  # Inicializamos la variable para sumar las líneas con producto 10987
@@ -65,6 +68,9 @@ class SaleOrder(models.Model):
                     total_down_payment += (line.product_uom_qty - line.qty_delivered) * line.price_reduce
             # Asignamos el valor calculado al campo 'x_hitos'
             record.write({'x_hitos_pendientes': total_down_payment})
+
+    class SaleOrder ( models.Model ) :
+        _inherit = 'sale.order'
 
     x_pendiente = fields.Monetary(
         string="Base Pendiente",
@@ -96,6 +102,9 @@ class SaleOrder(models.Model):
             for line in record.order_line:
                 total_base += line.qty_to_invoice * line.price_reduce
             record.write({'x_pendiente': total_base - total_base_ex})
+
+    class SaleOrder ( models.Model ) :
+        _inherit = 'sale.order'
 
     x_total = fields.Monetary(
         string="Base Total Facturada",
