@@ -243,7 +243,7 @@
         <!--SALE ORDER - ORDERS 	model="ir.ui.view" sale.action_orders-->
         <record id="sid_sale_order.amount_total_and_contract" model="ir.ui.view">
             <field name="name">sid_ov_amount_total_and_contract.tree</field>
-            <field name="model">sale.order.tree</field>
+            <field name="model">sale.order</field>
             <field name="priority" eval="16"/>
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
