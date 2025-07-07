@@ -5,7 +5,7 @@
     'summary': 'Funcionalidades varias',
     'description': 'Módulo con todas las funcionalidades de v15 personalizadas',
     'author': 'oscarsidsa81',
-    'depends': ['base','purchase','sale','stock'],
+    'depends': ['base','purchase','sale','stock','web_studio'],
     'data': [
         'views/sid_sale_order.xml'
     ],
