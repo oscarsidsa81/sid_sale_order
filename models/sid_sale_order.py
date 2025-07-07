@@ -102,3 +102,24 @@ class SaleOrder(models.Model):
             for line in record.order_line:
                 total_base += line.qty_to_invoice * line.price_reduce
             record.write({'x_pendiente': total_base - total_base_ex})
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    x_total = fields.Monetary(
+        string="Base Total Facturada",
+        compute="_compute_x_total",
+        help="Base facturada por línea de venta",
+        store=True,
+        readonly=True,
+        currency_field='currency_id'
+    )
+
+    @api.depends('order_line.qty_invoiced', 'order_line.price_unit', 'invoice_ids')
+
+    def _compute_x_total(self):
+        for record in self:
+            total_base = 0.0
+            for line in record.order_line:
+                total_base += line.qty_invoiced * line.price_reduce_taxexcl
+            record.write({'x_total': total_base})
