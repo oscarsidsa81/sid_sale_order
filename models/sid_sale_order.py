@@ -68,3 +68,37 @@ class SaleOrder(models.Model):
                     total_down_payment += (line.product_uom_qty - line.qty_delivered) * line.price_reduce
             # Asignamos el valor calculado al campo 'x_hitos'
             record.write({'x_hitos_pendientes': total_down_payment})
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    x_pendiente = fields.Monetary(
+        string="Base Pendiente",
+        compute="_compute_x_pendiente",
+        help="Base imponible que queda por facturar y ya está entregado",
+        store=True,
+        readonly=True,
+        currency_field='currency_id'
+    )
+
+    @api.depends('order_line.qty_to_invoice', 'order_line.price_reduce', 'invoice_ids', 'order_line.qty_delivered', 'order_line.product_uom_qty')
+
+    def _compute_x_pendiente(self):
+        for record in self:
+            total_base_ex = 0.0
+            for line in record.order_line:
+                # Verificamos si el producto tiene un ID diferente de 10987
+                if line.product_id.default_code != "Down payment":
+                    # Si la cantidad entregada es mayor que la cantidad pedida, restamos la diferencia
+                    if line.qty_delivered > line.product_uom_qty and line.qty_invoiced <= line.product_uom_qty:
+                        total_base_ex += (line.qty_delivered - line.product_uom_qty) * line.price_reduce
+                        # Si la cantidad facturada es mayor que la cantidad pedida, restamos la diferencia
+                    elif line.qty_invoiced < line.qty_delivered and line.qty_invoiced > line.product_uom_qty:
+                        total_base_ex += (line.qty_delivered - line.qty_invoiced) * line.price_reduce
+                        # En caso contrario, no se suma nada
+                    else:
+                        total_base_ex += 0.0
+            total_base = 0.0
+            for line in record.order_line:
+                total_base += line.qty_to_invoice * line.price_reduce
+            record.write({'x_pendiente': total_base - total_base_ex})
