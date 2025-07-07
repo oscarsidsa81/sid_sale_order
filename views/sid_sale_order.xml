@@ -240,7 +240,25 @@
             </field>
         </record> -->
 
-
+        <!--SALE ORDER - ORDERS 	model="ir.ui.view" sale.action_orders-->
+        <record id="sid_sale_order.amount_total_and_contract" model="ir.ui.view">
+            <field name="name">sid_ov_amount_total_and_contract.tree</field>
+            <field name="model">sale.order.tree</field>
+            <field name="priority" eval="16"/>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+              <xpath expr="//field[@name='name']" position="after">
+                <field name="quotations_id" widget="many2one" optional="show"/>
+              </xpath>
+              <xpath expr="//field[@name='amount_total']" position="before">
+                <field name="x_restante" string="Base a Entregar**" sum="Total a Entregar" optional="show"/>
+                <field name="x_excesos" string="Excesos a Fact.**" sum="Total Excesos" optional="show"/>
+                <field name="x_hitos_pendientes" string="Hitos Pend.**" sum="Total Hitos" optional="show"/>
+                <field name="x_pendiente" string="Base a Fact.**" sum="Total a Facturar" optional="show"/>
+                <field name="x_total" sum="Total a Facturado" optional="show"/>
+              </xpath>
+            </field>
+        </record>
         <!--SALE ORDER LINE-->
 
         <record id="sid_sale_order.sid_ov_various_form_readonly" model="ir.ui.view">
