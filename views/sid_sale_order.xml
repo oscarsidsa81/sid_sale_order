@@ -1,8 +1,7 @@
 <odoo>
     <data>
 
-        <!--SALE ORDER FORM-->
-
+        <!--ORDER LINE FORM-->
         <record id="sid_sale_order.bonds_and_dossier" model="ir.ui.view">
             <field name="name">sid_ov_bonds_sale.form</field>
             <field name="model">sale.order</field>
@@ -40,8 +39,7 @@
             </field>
         </record>
 
-
-        <record id="sid_sale_order.various_actions_and_fields" model="ir.ui.view">
+   <!--     <record id="sid_sale_order.various_actions_and_fields" model="ir.ui.view">
             <field name="name">sid_ov_various_actions_and_fields.form</field>
             <field name="model">sale.order</field>
             <field name="priority" eval="3000"/>
@@ -67,10 +65,10 @@
               <xpath expr="//field[@name='partner_id']" position="attributes">
                                 <attribute name="domain">[('is_company', '=', True)]</attribute>
                             </xpath>
-              <!--<xpath expr="//field[@name='partner_consignee']" position="attributes">
+             <xpath expr="//field[@name='partner_consignee']" position="attributes">
                                 <attribute name="domain">['|','&amp;',('type', '=', 'delivery'),('parent_id', '=', partner_id),'&amp;',('is_company', '=', True),('id', '=', partner_id)]</attribute>
-                            </xpath> -->
-              <xpath expr="//field[@name='partner_final_destiny']" position="attributes">
+                            </xpath>
+           <xpath expr="//field[@name='partner_final_destiny']" position="attributes">
                                 <attribute name="domain">['|','&amp;',('type', '=', 'delivery'),('parent_id', '=', partner_id),'&amp;',('is_company', '=', True),('id', '=', partner_id)]</attribute>
                             </xpath>
               <xpath expr="//field[@name='order_line']/form//field[@name='supplier_id']" position="attributes">
@@ -98,14 +96,18 @@
                 <attribute name="string">Expediting</attribute>
               </xpath>
               <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/field[@name='order_line']/form[1]/group[2]/group[1]/field[@name='product_id']" position="attributes">
-            <!--    <attribute name="attrs">{"readonly": ["|",["product_updatable","=",False],["purchase_line_count","&gt;",0]], "required": [["display_type","=",False]]}</attribute>  -->
-                <attribute name="default_focus">1</attribute>
+                    <attribute name="attrs">{"readonly": ["|",["product_updatable","=",False],["purchase_line_count","&gt;",0]], "required": [["display_type","=",False]]}</attribute>
+                    <attribute name="default_focus">1</attribute>
               </xpath>
               <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/field[@name='order_line']/tree[1]/field[@name='product_uom']" position="after">
                 <field name="forecasted_qty" optional="show"/>
               </xpath>
               <xpath expr="//field[@name='order_line']" position="attributes">
                   <attribute name="context">{'location':(8,48)}</attribute>
+              </xpath>
+              <xpath expr="//field[@name='tax_totals_json']" position="after">
+                <field name="x_costes" string="Costes adicionales" attrs="{'readonly': [('state', 'not in', ['draft', 'sent'])]}"/>
+                <field name="x_margen" string="Margen neto" widget="percentage"/>
               </xpath>
               <xpath expr="//form[1]/header[1]/button[@name='action_confirm'][2]" position="replace">
                 <button name="action_confirm" id="action_confirm" data-hotkey="v" string="Confirmar" class="btn-primary" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('sent')),('x_costes','=',0)]}" confirm="Está seguro de confirmar el pedido?"/>
@@ -118,15 +120,12 @@
                 <button name="action_cancel" type="object" string="Cancelar" attrs="{'invisible': ['|', ('state', 'not in', ['sale']), ('id', '=', False)]}" data-hotkey="z" confirm="Está seguro de cancelar el pedido? Recuerda que si hay movimientos de stock confirmados o facturas emitidas no se debe cancelar hasta devolver las unidades o rectificar las facturas emitidas."/>
               </xpath>
               <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[@name='gross_margin']" position="replace"/>
-              <xpath expr="//field[@name='tax_totals_json']" position="after">
-                <field name="x_costes" string="Costes adicionales" attrs="{'readonly': [('state', 'not in', ['draft', 'sent'])]}"/>
-                <field name="x_margen" string="Margen neto" widget="percentage"/>
-              </xpath>
               <xpath expr="//field[@name='sale_order_template_id']" position="replace"/>
                 <xpath expr="//form[1]/header[1]/button[@name='action_confirm'][1]" position="replace">
               </xpath>
               <xpath expr="//button[@name='preview_sale_order']" position="after">
-              <button class="oe_stat_button" icon="fa-file-o" type="action" name="1022" string="Documentos adjuntos"/>
+                    <button class="oe_stat_button" icon="fa-file-o" type="action" name="10__export__.ir_act_window_1022_0a5c99e8" string="Documentos adjuntos"/>
+                    <button class="oe_stat_button" icon="fa-file-o" type="action" name="ref('__export__.ir_act_window_1022_0a5c99e8')" string="Documentos adjuntos"/>
               </xpath>
               <xpath expr="//field[@name='base_currency_id']" position="attributes">
                 <attribute name="attrs">{'invisible': [('line_team_id', '=', False)]}</attribute>
@@ -168,7 +167,8 @@
                 <attribute name="string">Proveedor</attribute>
               </xpath>
               <xpath expr="//button[@name='action_view_purchase_orders']" position="before">
-                <button string="Líneas de pedido" class="oe_stat_button" icon="fa-list-alt" type="action" name="1070"/>
+                   <button string="Líneas de pedido" class="oe_stat_button" icon="fa-list-alt" type="action" name="1070"/>
+                  <button string="Líneas de pedido" class="oe_stat_button" icon="fa-list-alt" type="action" name="ref('__export__.ir_act_window_1070_eac73a51')"/>
               </xpath>
               <xpath expr="//field[@name='order_line']/form//field[@name='supplier_delivery_days']" position="replace">
               </xpath>
@@ -214,7 +214,7 @@
                  <attribute name="attrs">{'invisible': [('team_id', '!=', 7)]}</attribute>
               </xpath>
               <xpath expr="//button[@name='action_view_purchase_orders']" position="after">
-                <button class="oe_stat_button" icon="fa-gears" type="action" name="1176" attrs="{'invisible': [('x_sale_order_id_sale_activity_count', '=', 0)]}">
+                <button class="oe_stat_button" icon="fa-gears" type="action" name="ref('__export__.ir_act_window_1176_bbd2bb09')" attrs="{'invisible': [('x_sale_order_id_sale_activity_count', '=', 0)]}">
                   <field widget="statinfo" name="x_sale_order_id_sale_activity_count" string="Actividades"/>
                 </button>
               </xpath>
@@ -231,14 +231,15 @@
                 <field name="x_ult_cost" optional="show"/>
               </xpath>
              <xpath expr="//button[@name='action_view_purchase_orders']" position="after">
-                <button class="oe_stat_button" string="Lotes" icon="fa-tags" attrs="{'invisible': ['|', ('state', 'in', ['sale']), ('id', '=', False)]}" type="action" name="1333">
+                <button class="oe_stat_button" string="Lotes" icon="fa-tags" attrs="{'invisible': ['|', ('state', 'in', ['sale']), ('id', '=', False)]}" type="action" name="ref('	__export__.ir_act_server_1333_1c1644dc')">
                 </button>
               </xpath>
               <xpath expr="//field[@name='quotations_id']" position="after">
                 <field name="sale_order_template_id"/>
               </xpath>
             </field>
-        </record>
+        </record> -->
+
 
         <!--SALE ORDER LINE-->
 
