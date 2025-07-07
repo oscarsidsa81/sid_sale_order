@@ -41,9 +41,30 @@ class SaleOrder(models.Model):
         for record in self:
             total_base = 0.0
             for line in record.order_line:
-                if line.product_id.id != 10987:
+                if line.product_id.default_code != "Down payment":
                     if line.qty_delivered > line.product_uom_qty and line.qty_invoiced <= line.product_uom_qty:
                         total_base += (line.qty_delivered - line.product_uom_qty) * line.price_reduce
                     elif line.qty_invoiced < line.qty_delivered and line.qty_invoiced > line.product_uom_qty:
                         total_base += (line.qty_delivered - line.qty_invoiced) * line.price_reduce
             record.x_excesos = total_base
+
+    class SaleOrder(models.Model):
+            _inherit = 'sale.order'
+
+            x_hitos_pendientes = fields.Monetary(
+                string="Hitos pendientes",
+                compute="_compute_x_hitos_pendientes",
+                store=True,
+                currency_field='currency_id',
+                help="Para cálculo de Hitos Pendientes del campo Down Payment"
+            )
+
+    def _compute_x_hitos_pendientes(self):
+        for record in self:
+            total_down_payment = 0.0  # Inicializamos la variable para sumar las líneas con producto 10987
+            for line in record.order_line:
+                # Si el producto es 10987, la cantidad es mayor que 0 y no está facturado
+                if line.product_id.default_code == "Down payment" and line.product_uom_qty > 0 and line.qty_delivered == 0 and line.qty_invoiced == 0:
+                    total_down_payment += (line.product_uom_qty - line.qty_delivered) * line.price_reduce
+            # Asignamos el valor calculado al campo 'x_hitos'
+            record.write({'x_hitos_pendientes': total_down_payment})
