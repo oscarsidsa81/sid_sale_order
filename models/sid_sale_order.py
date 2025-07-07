@@ -23,6 +23,9 @@ class SaleOrder(models.Model):
                         total_base += (line.product_uom_qty - line.qty_delivered) * line.price_reduce
             record.x_restante = total_base
 
+    class SaleOrder ( models.Model ) :
+        _inherit = 'sale.order'
+
     x_excesos = fields.Monetary(
         string="Excesos Pend.",
         compute="_compute_x_excesos",
