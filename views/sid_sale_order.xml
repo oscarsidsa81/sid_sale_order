@@ -499,7 +499,7 @@
         </record>
 
         <record id="sid_sale_order.taxes" model="ir.ui.view">
-            <field name="name">sid_ov_various_fields.routes</field> <!--OV - Rutas // evita que sean editables si está
+            <field name="name">sid_ov_various_fields.amount</field> <!--OV - Rutas // evita que sean editables si está
             confirmada la venta -->
             <field name="model">sale.order.line</field>
             <field name="priority" eval="2002"/>
